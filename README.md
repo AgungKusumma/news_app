@@ -45,11 +45,20 @@
 
 ## 📸 Screenshots
 
-### 🏠 Home Screen
-![Home Screen](screenshots/Screenshot_20250613_221354_Home.png)
-
-### 📄 Detail Screen
-![Detail Screen](screenshots/Screenshot_20250613_221444_Detail.png)
+<table>
+  <tr>
+    <td align="center"><b>Home Screen</b></td>
+    <td align="center"><b>Detail Screen</b></td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/Screenshot_20250613_221354_Home.png" alt="Home Screen" width="300"/>
+    </td>
+    <td align="center">
+      <img src="screenshots/Screenshot_20250613_221444_Detail.png" alt="Detail Screen" width="300"/>
+    </td>
+  </tr>
+</table>
 
 ---
 
