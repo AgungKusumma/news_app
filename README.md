@@ -43,6 +43,16 @@
 
 ---
 
+## 📸 Screenshots
+
+### 🏠 Home Screen
+![Home Screen](screenshots/Screenshot_20250613_221354_Home.png)
+
+### 📄 Detail Screen
+![Detail Screen](screenshots/Screenshot_20250613_221444_Detail.png)
+
+---
+
 ## 📦 Getting Started
 
 To run this project locally:
