@@ -50,7 +50,7 @@ To run this project locally:
 ### 1. Clone the repository
 Run the following command in your terminal:
 
-`git clone https://github.com/your-username/news_app.git`  
+`git clone https://github.com/AgungKusumma/news_app.git`  
 Then navigate into the project folder:  
 `cd news_app`
 
