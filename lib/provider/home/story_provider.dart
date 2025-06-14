@@ -12,9 +12,18 @@ class StoryProvider extends ChangeNotifier {
 
   StoryResultState get state => _state;
 
-  List<Story> _stories = [];
+  final List<Story> _stories = [];
 
   List<Story> get stories => _stories;
+
+  int _page = 1;
+  final int _size = 10;
+  bool _isLoadingMore = false;
+  bool _hasNextPage = true;
+
+  bool get isLoadingMore => _isLoadingMore;
+
+  bool get hasNextPage => _hasNextPage;
 
   StoryProvider({
     required this.apiService,
@@ -29,15 +38,57 @@ class StoryProvider extends ChangeNotifier {
     }
 
     _state = StoryLoadingState();
+    _page = 1;
+    _hasNextPage = true;
     notifyListeners();
 
     try {
-      final response = await apiService.getAllStories(authProvider.token!);
-      _stories = response.listStory;
-      _state = StorySuccessState(stories);
+      final response = await apiService.getAllStories(
+        authProvider.token!,
+        page: _page,
+        size: _size,
+      );
+      _stories.clear();
+      _stories.addAll(response.listStory);
+
+      _hasNextPage = response.listStory.length == _size;
+
+      _state = StorySuccessState(_stories);
     } catch (e) {
       _state = StoryErrorState(e.toString());
     }
+
+    notifyListeners();
+  }
+
+  Future<void> fetchMoreStories() async {
+    if (_isLoadingMore || !_hasNextPage) return;
+
+    _isLoadingMore = true;
+    notifyListeners();
+
+    _page++;
+
+    try {
+      final response = await apiService.getAllStories(
+        authProvider.token!,
+        page: _page,
+        size: _size,
+      );
+      final newStories = response.listStory;
+
+      if (newStories.isNotEmpty) {
+        _stories.addAll(newStories);
+        _hasNextPage = newStories.length == _size;
+        _state = StorySuccessState(_stories);
+      } else {
+        _hasNextPage = false;
+      }
+    } catch (e) {
+      _state = StoryErrorState(e.toString());
+    }
+
+    _isLoadingMore = false;
     notifyListeners();
   }
 }
