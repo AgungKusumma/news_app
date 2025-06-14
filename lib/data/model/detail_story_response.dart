@@ -1,20 +1,19 @@
-import 'package:news_app/data/model/base_response.dart';
-import 'package:news_app/data/model/story_response.dart';
 
-class DetailStoryResponse extends BaseResponse {
-  final Story story;
+import 'package:freezed_annotation/freezed_annotation.dart' hide JsonKey;
+import 'package:json_annotation/json_annotation.dart';
+import 'package:news_app/data/model/story.dart';
 
-  DetailStoryResponse({
-    required super.error,
-    required super.message,
-    required this.story,
-  });
+part 'detail_story_response.freezed.dart';
+part 'detail_story_response.g.dart';
 
-  factory DetailStoryResponse.fromJson(Map<String, dynamic> json) {
-    return DetailStoryResponse(
-      error: json['error'],
-      message: json['message'],
-      story: Story.fromJson(json['story']),
-    );
-  }
+@freezed
+abstract class DetailStoryResponse with _$DetailStoryResponse {
+  const factory DetailStoryResponse({
+    required bool error,
+    required String message,
+    required Story story,
+  }) = _DetailStoryResponse;
+
+  factory DetailStoryResponse.fromJson(Map<String, dynamic> json) =>
+      _$DetailStoryResponseFromJson(json);
 }

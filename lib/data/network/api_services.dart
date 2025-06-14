@@ -5,7 +5,7 @@ import 'package:news_app/common/constants.dart';
 import 'package:news_app/data/model/base_response.dart';
 import 'package:news_app/data/model/detail_story_response.dart';
 import 'package:news_app/data/model/login_response.dart';
-import 'package:news_app/data/model/story_response.dart';
+import 'package:news_app/data/model/all_stories_response.dart';
 import 'package:news_app/utils/api_exceptions.dart';
 import 'package:news_app/utils/api_headers.dart';
 

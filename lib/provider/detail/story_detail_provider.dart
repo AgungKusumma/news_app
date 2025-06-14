@@ -7,28 +7,31 @@ class StoryDetailProvider extends ChangeNotifier {
   final ApiService apiService;
   final AuthProvider authProvider;
 
-  StoryDetailResultState _state = StoryDetailNoneState();
+  StoryDetailResultState _state = const StoryDetailResultState.none();
 
   StoryDetailResultState get state => _state;
 
-  StoryDetailProvider({required this.apiService, required this.authProvider});
+  StoryDetailProvider({
+    required this.apiService,
+    required this.authProvider,
+  });
 
   Future<void> fetchDetailStory(String storyId) async {
     if (!authProvider.isLoggedIn) {
-      _state = StoryDetailErrorState('User not logged in');
+      _state = const StoryDetailResultState.error('User not logged in');
       notifyListeners();
       return;
     }
 
-    _state = StoryDetailLoadingState();
+    _state = const StoryDetailResultState.loading();
     notifyListeners();
 
     try {
       final response =
           await apiService.getDetailStory(authProvider.token!, storyId);
-      _state = StoryDetailSuccessState(response.story);
+      _state = StoryDetailResultState.success(response.story);
     } catch (e) {
-      _state = StoryDetailErrorState(e.toString());
+      _state = StoryDetailResultState.error(e.toString());
     }
 
     notifyListeners();

@@ -1,20 +1,12 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:news_app/data/model/login_response.dart';
 
-sealed class AuthResultState {}
+part 'auth_result_state.freezed.dart';
 
-class AuthNoneState extends AuthResultState {}
-
-class AuthLoadingState extends AuthResultState {}
-
-class AuthErrorState extends AuthResultState {
-  final String error;
-
-  AuthErrorState(this.error);
-}
-
-class AuthSuccessState extends AuthResultState {
-  final String message;
-  final LoginResult? data;
-
-  AuthSuccessState(this.message, {this.data});
+@freezed
+sealed class AuthResultState with _$AuthResultState {
+  const factory AuthResultState.none() = AuthNoneState;
+  const factory AuthResultState.loading() = AuthLoadingState;
+  const factory AuthResultState.error(String error) = AuthErrorState;
+  const factory AuthResultState.success(String message, {LoginResult? data}) = AuthSuccessState;
 }

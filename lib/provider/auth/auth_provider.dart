@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthProvider extends ChangeNotifier {
   final ApiService apiService;
 
-  AuthResultState _state = AuthNoneState();
+  AuthResultState _state = const AuthResultState.none();
 
   AuthResultState get state => _state;
 
@@ -25,39 +25,36 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> register(String name, String email, String password) async {
-    _state = AuthLoadingState();
+    _state = const AuthResultState.loading();
     notifyListeners();
 
     try {
       final res = await apiService.register(name, email, password);
-      if (res.error) {
-        _state = AuthErrorState(res.message);
-      } else {
-        _state = AuthSuccessState(res.message, data: null);
-      }
+      _state = res.error
+          ? AuthResultState.error(res.message)
+          : AuthResultState.success(res.message);
     } catch (e) {
-      _state = AuthErrorState(e.toString());
+      _state = AuthResultState.error(e.toString());
     }
     notifyListeners();
   }
 
   Future<void> login(String email, String password) async {
-    _state = AuthLoadingState();
+    _state = const AuthResultState.loading();
     notifyListeners();
 
     try {
       final res = await apiService.login(email, password);
       if (res.error) {
-        _state = AuthErrorState(res.message);
+        _state = AuthResultState.error(res.message);
       } else {
         _token = res.loginResult.token;
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', _token!);
-
-        _state = AuthSuccessState(res.message, data: res.loginResult);
+        _state = AuthResultState.success(res.message, data: res.loginResult);
       }
     } catch (e) {
-      _state = AuthErrorState(e.toString());
+      _state = AuthResultState.error(e.toString());
     }
     notifyListeners();
   }
@@ -66,12 +63,12 @@ class AuthProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     _token = null;
-    _state = AuthNoneState();
+    _state = const AuthResultState.none();
     notifyListeners();
   }
 
   void clearState() {
-    _state = AuthNoneState();
+    _state = const AuthResultState.none();
     notifyListeners();
   }
 }

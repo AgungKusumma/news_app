@@ -21,17 +21,17 @@ class StoryDetailScreen extends StatelessWidget {
         authProvider: Provider.of<AuthProvider>(context, listen: false),
       )..fetchDetailStory(storyId),
       child: Scaffold(
-        body: Consumer<StoryDetailProvider>(
-          builder: (context, provider, _) {
-            final state = provider.state;
+        body: Consumer<StoryDetailProvider>(builder: (context, provider, _) {
+          final state = provider.state;
 
-            if (state is StoryDetailLoadingState) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is StoryDetailErrorState) {
-              return Center(child: Text('Error: ${state.error}'));
-            } else if (state is StoryDetailSuccessState) {
-              final story = state.storyDetail;
-
+          switch (state) {
+            case StoryDetailNoneState():
+              break;
+            case StoryDetailLoadingState():
+              const Center(child: CircularProgressIndicator());
+            case StoryDetailErrorState(:final error):
+              Center(child: Text('Error: $error'));
+            case StoryDetailSuccessState(:final storyDetail):
               return Column(
                 children: [
                   SafeArea(
@@ -44,7 +44,7 @@ class StoryDetailScreen extends StatelessWidget {
                             bottomRight: Radius.circular(24),
                           ),
                           child: Image.network(
-                            story.photoUrl,
+                            storyDetail.photoUrl,
                             height: 280,
                             width: double.infinity,
                             fit: BoxFit.cover,
@@ -94,7 +94,7 @@ class StoryDetailScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            story.name,
+                            storyDetail.name,
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall
@@ -104,18 +104,19 @@ class StoryDetailScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            story.description,
+                            storyDetail.description,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           const SizedBox(height: 24),
                           Text(
-                            'Created: ${DateFormatter.formatDate(story.createdAt)}',
+                            'Created: ${DateFormatter.formatDate(storyDetail.createdAt)}',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
-                          if (story.lat != null && story.lon != null) ...[
+                          if (storyDetail.lat != null &&
+                              storyDetail.lon != null) ...[
                             const SizedBox(height: 8),
                             Text(
-                              'Location: (${story.lat}, ${story.lon})',
+                              'Location: (${storyDetail.lat}, ${storyDetail.lon})',
                               style: Theme.of(context).textTheme.bodySmall,
                             ),
                             const SizedBox(height: 8),
@@ -126,15 +127,16 @@ class StoryDetailScreen extends StatelessWidget {
                                   height: 200,
                                   child: GoogleMap(
                                     initialCameraPosition: CameraPosition(
-                                      target: LatLng(story.lat!, story.lon!),
+                                      target: LatLng(
+                                          storyDetail.lat!, storyDetail.lon!),
                                       zoom: 14,
                                     ),
                                     markers: {
                                       Marker(
                                         markerId:
                                             const MarkerId('story_location'),
-                                        position:
-                                            LatLng(story.lat!, story.lon!),
+                                        position: LatLng(
+                                            storyDetail.lat!, storyDetail.lon!),
                                       ),
                                     },
                                     zoomControlsEnabled: true,
@@ -149,11 +151,10 @@ class StoryDetailScreen extends StatelessWidget {
                   ),
                 ],
               );
-            }
+          }
 
-            return const SizedBox.shrink();
-          },
-        ),
+          return const SizedBox.shrink();
+        }),
       ),
     );
   }

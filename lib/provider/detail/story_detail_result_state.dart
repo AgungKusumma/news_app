@@ -1,19 +1,12 @@
-import 'package:news_app/data/model/story_response.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:news_app/data/model/story.dart';
 
-sealed class StoryDetailResultState {}
+part 'story_detail_result_state.freezed.dart';
 
-class StoryDetailNoneState extends StoryDetailResultState {}
-
-class StoryDetailLoadingState extends StoryDetailResultState {}
-
-class StoryDetailErrorState extends StoryDetailResultState {
-  final String error;
-
-  StoryDetailErrorState(this.error);
-}
-
-class StoryDetailSuccessState extends StoryDetailResultState {
-  final Story storyDetail;
-
-  StoryDetailSuccessState(this.storyDetail);
+@freezed
+sealed class StoryDetailResultState with _$StoryDetailResultState {
+  const factory StoryDetailResultState.none() = StoryDetailNoneState;
+  const factory StoryDetailResultState.loading() = StoryDetailLoadingState;
+  const factory StoryDetailResultState.error(String error) = StoryDetailErrorState;
+  const factory StoryDetailResultState.success(Story storyDetail) = StoryDetailSuccessState;
 }
