@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -131,6 +133,11 @@ class StoryDetailScreen extends StatelessWidget {
                                           storyDetail.lat!, storyDetail.lon!),
                                       zoom: 14,
                                     ),
+                                    gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                                      Factory<OneSequenceGestureRecognizer>(
+                                            () => EagerGestureRecognizer(),
+                                      ),
+                                    },
                                     markers: {
                                       Marker(
                                         markerId:
