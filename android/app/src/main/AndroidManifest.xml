@@ -33,7 +33,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDBytb9w2u7CvEwDu21_XD7sxCb8i-toK0" />
+            android:value="AIzaSyBFPxGultjNT35JrkrVlgnvuAsB5flLXrM" />
 
         <meta-data
             android:name="io.flutter.embedding.android.EnableImpeller"
