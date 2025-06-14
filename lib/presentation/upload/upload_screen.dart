@@ -102,39 +102,56 @@ class _UploadScreenState extends State<UploadScreen> {
   }
 
   _onUpload() async {
-    final ScaffoldMessengerState scaffoldMessengerState =
-        ScaffoldMessenger.of(context);
+    final scaffoldMessengerState = ScaffoldMessenger.of(context);
     final uploadProvider = context.read<UploadProvider>();
     final mapProvider = context.read<MapProvider>();
-
     final homeProvider = context.read<HomeImageProvider>();
+
     final imagePath = homeProvider.imagePath;
     final imageFile = homeProvider.imageFile;
-    if (imagePath == null || imageFile == null) return;
 
-    final fileName = imageFile.name;
-    final bytes = await imageFile.readAsBytes();
+    if (imagePath == null || imageFile == null) {
+      scaffoldMessengerState.showSnackBar(
+        const SnackBar(content: Text("No image selected.")),
+      );
+      return;
+    }
 
-    final newBytes = await uploadProvider.compressImage(bytes);
+    final file = File(imagePath);
+    if (!await file.exists()) {
+      scaffoldMessengerState.showSnackBar(
+        const SnackBar(content: Text("Image file no longer exists.")),
+      );
+      return;
+    }
 
-    await uploadProvider.upload(
-      newBytes,
-      fileName,
-      descriptionC.text,
-      mapProvider.selectedLocation?.latitude,
-      mapProvider.selectedLocation?.longitude,
-    );
+    try {
+      final fileName = imageFile.name;
+      final bytes = await imageFile.readAsBytes();
+      final newBytes = await uploadProvider.compressImage(bytes);
 
-    scaffoldMessengerState.showSnackBar(
-      SnackBar(content: Text(uploadProvider.message)),
-    );
+      await uploadProvider.upload(
+        newBytes,
+        fileName,
+        descriptionC.text,
+        mapProvider.selectedLocation?.latitude,
+        mapProvider.selectedLocation?.longitude,
+      );
 
-    if (uploadProvider.uploadResponse != null &&
-        !uploadProvider.uploadResponse!.error) {
-      homeProvider.setImageFile(null);
-      homeProvider.setImagePath(null);
+      scaffoldMessengerState.showSnackBar(
+        SnackBar(content: Text(uploadProvider.message)),
+      );
 
-      context.pop(true);
+      if (uploadProvider.uploadResponse != null &&
+          !uploadProvider.uploadResponse!.error) {
+        homeProvider.setImageFile(null);
+        homeProvider.setImagePath(null);
+        context.pop(true);
+      }
+    } catch (e) {
+      scaffoldMessengerState.showSnackBar(
+        const SnackBar(content: Text("Failed to read the image file.")),
+      );
     }
   }
 
