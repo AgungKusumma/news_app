@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:news_app/provider/map/map_provider.dart';
@@ -28,6 +30,11 @@ class LocationPickerMapWidget extends StatelessWidget {
                 // default Jakarta
                 zoom: 14,
               ),
+              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                Factory<OneSequenceGestureRecognizer>(
+                      () => EagerGestureRecognizer(),
+                ),
+              },
               onTap: (LatLng latLng) {
                 context.read<MapProvider>().setLocationWithAddress(latLng);
               },
