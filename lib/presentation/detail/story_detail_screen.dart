@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:news_app/data/network/api_services.dart';
 import 'package:news_app/provider/auth/auth_provider.dart';
 import 'package:news_app/provider/detail/story_detail_provider.dart';
@@ -116,6 +117,30 @@ class StoryDetailScreen extends StatelessWidget {
                             Text(
                               'Location: (${story.lat}, ${story.lon})',
                               style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                            const SizedBox(height: 8),
+                            Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: SizedBox(
+                                  height: 200,
+                                  child: GoogleMap(
+                                    initialCameraPosition: CameraPosition(
+                                      target: LatLng(story.lat!, story.lon!),
+                                      zoom: 14,
+                                    ),
+                                    markers: {
+                                      Marker(
+                                        markerId:
+                                            const MarkerId('story_location'),
+                                        position:
+                                            LatLng(story.lat!, story.lon!),
+                                      ),
+                                    },
+                                    zoomControlsEnabled: true,
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ],

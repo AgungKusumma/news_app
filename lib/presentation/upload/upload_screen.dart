@@ -5,8 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:news_app/presentation/map/location_picker_map_widget.dart';
 import 'package:news_app/provider/image/home_image_provider.dart';
 import 'package:news_app/provider/image/upload_provider.dart';
+import 'package:news_app/provider/map/map_provider.dart';
 import 'package:provider/provider.dart';
 
 class UploadScreen extends StatefulWidget {
@@ -27,6 +29,9 @@ class _UploadScreenState extends State<UploadScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final myColor = isDarkMode ? Colors.black : Colors.white;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Upload Image"),
@@ -55,6 +60,8 @@ class _UploadScreenState extends State<UploadScreen> {
                         ? const Icon(Icons.image, size: 100)
                         : _showImage(),
                     const SizedBox(height: 16),
+                    const LocationPickerMapWidget(),
+                    const SizedBox(height: 16),
                     TextField(
                       controller: descriptionC,
                       maxLines: 5,
@@ -69,7 +76,7 @@ class _UploadScreenState extends State<UploadScreen> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              color: Colors.white,
+              color: myColor,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -98,6 +105,7 @@ class _UploadScreenState extends State<UploadScreen> {
     final ScaffoldMessengerState scaffoldMessengerState =
         ScaffoldMessenger.of(context);
     final uploadProvider = context.read<UploadProvider>();
+    final mapProvider = context.read<MapProvider>();
 
     final homeProvider = context.read<HomeImageProvider>();
     final imagePath = homeProvider.imagePath;
@@ -113,13 +121,16 @@ class _UploadScreenState extends State<UploadScreen> {
       newBytes,
       fileName,
       descriptionC.text,
+      mapProvider.selectedLocation?.latitude,
+      mapProvider.selectedLocation?.longitude,
     );
 
     scaffoldMessengerState.showSnackBar(
       SnackBar(content: Text(uploadProvider.message)),
     );
 
-    if (uploadProvider.uploadResponse != null && !uploadProvider.uploadResponse!.error) {
+    if (uploadProvider.uploadResponse != null &&
+        !uploadProvider.uploadResponse!.error) {
       homeProvider.setImageFile(null);
       homeProvider.setImagePath(null);
 

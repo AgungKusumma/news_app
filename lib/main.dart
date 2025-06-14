@@ -4,6 +4,7 @@ import 'package:news_app/provider/auth/auth_provider.dart';
 import 'package:news_app/provider/home/story_provider.dart';
 import 'package:news_app/provider/image/home_image_provider.dart';
 import 'package:news_app/provider/image/upload_provider.dart';
+import 'package:news_app/provider/map/map_provider.dart';
 import 'package:news_app/routes/app_router.dart';
 import 'package:news_app/style/theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,9 @@ void main() {
             apiService: ApiService(),
             authProvider: authProvider,
           ),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MapProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => StoryProvider(
