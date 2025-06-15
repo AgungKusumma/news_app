@@ -7,6 +7,7 @@ import 'package:news_app/data/network/api_services.dart';
 import 'package:news_app/provider/auth/auth_provider.dart';
 import 'package:news_app/provider/detail/story_detail_provider.dart';
 import 'package:news_app/provider/detail/story_detail_result_state.dart';
+import 'package:news_app/provider/map/map_provider.dart';
 import 'package:news_app/utils/date_formatter.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +35,12 @@ class StoryDetailScreen extends StatelessWidget {
             case StoryDetailErrorState(:final error):
               Center(child: Text('Error: $error'));
             case StoryDetailSuccessState(:final storyDetail):
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.read<MapProvider>().setLocationWithAddress(
+                  LatLng(storyDetail.lat!, storyDetail.lon!),
+                );
+              });
+
               return Column(
                 children: [
                   SafeArea(
@@ -133,17 +140,19 @@ class StoryDetailScreen extends StatelessWidget {
                                           storyDetail.lat!, storyDetail.lon!),
                                       zoom: 14,
                                     ),
-                                    gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+                                    gestureRecognizers: <Factory<
+                                        OneSequenceGestureRecognizer>>{
                                       Factory<OneSequenceGestureRecognizer>(
-                                            () => EagerGestureRecognizer(),
+                                        () => EagerGestureRecognizer(),
                                       ),
                                     },
                                     markers: {
                                       Marker(
-                                        markerId:
-                                            const MarkerId('story_location'),
-                                        position: LatLng(
-                                            storyDetail.lat!, storyDetail.lon!),
+                                        markerId: const MarkerId('story_location'),
+                                        position: LatLng(storyDetail.lat!, storyDetail.lon!),
+                                        infoWindow: InfoWindow(
+                                          title: context.watch<MapProvider>().selectedAddress,
+                                        ),
                                       ),
                                     },
                                     zoomControlsEnabled: true,

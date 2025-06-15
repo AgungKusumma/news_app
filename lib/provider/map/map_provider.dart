@@ -11,16 +11,6 @@ class MapProvider extends ChangeNotifier {
 
   String? get selectedAddress => _selectedAddress;
 
-  void setSelectedLocation(LatLng? location) {
-    _selectedLocation = location;
-    notifyListeners();
-  }
-
-  void setSelectedAddress(String address) {
-    _selectedAddress = address;
-    notifyListeners();
-  }
-
   Future<void> setLocationWithAddress(LatLng latLng) async {
     _selectedLocation = latLng;
     try {
@@ -38,6 +28,12 @@ class MapProvider extends ChangeNotifier {
     } catch (e) {
       _selectedAddress = 'Failed to get address';
     }
+    notifyListeners();
+  }
+
+  void clearSelectedLocation() {
+    _selectedLocation = null;
+    _selectedAddress = '';
     notifyListeners();
   }
 }

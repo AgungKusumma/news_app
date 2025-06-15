@@ -5,12 +5,25 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:news_app/provider/map/map_provider.dart';
 import 'package:provider/provider.dart';
 
-class LocationPickerMapWidget extends StatelessWidget {
+class LocationPickerMapWidget extends StatefulWidget {
   const LocationPickerMapWidget({super.key});
 
   @override
+  State<LocationPickerMapWidget> createState() => _LocationPickerMapWidgetState();
+}
+
+class _LocationPickerMapWidgetState extends State<LocationPickerMapWidget> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<MapProvider>().clearSelectedLocation();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final selectedLocation = context.watch<MapProvider>().selectedLocation;
+    var selectedLocation = context.watch<MapProvider>().selectedLocation;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
