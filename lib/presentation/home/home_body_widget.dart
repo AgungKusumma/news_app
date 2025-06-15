@@ -19,15 +19,15 @@ class HomeBodyWidget extends StatelessWidget {
           case StoryNoneState():
             break;
           case StoryLoadingState():
-            const Center(
+            return const Center(
               child: CircularProgressIndicator(color: Colors.blue),
             );
-          case StoryErrorState(:final error):
-            Center(
+          case StoryErrorState():
+            return const Center(
               child: Text(
-                'Oops! Something went wrong:\n$error',
+                'Oops! Something went wrong:\nPlease check your internet connection',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.redAccent, fontSize: 16),
+                style: TextStyle(color: Colors.redAccent, fontSize: 16),
               ),
             );
           case StorySuccessState(:final stories):

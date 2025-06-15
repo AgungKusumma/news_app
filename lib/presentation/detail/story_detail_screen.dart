@@ -31,9 +31,15 @@ class StoryDetailScreen extends StatelessWidget {
             case StoryDetailNoneState():
               break;
             case StoryDetailLoadingState():
-              const Center(child: CircularProgressIndicator());
-            case StoryDetailErrorState(:final error):
-              Center(child: Text('Error: $error'));
+              return const Center(child: CircularProgressIndicator());
+            case StoryDetailErrorState():
+              return const Center(
+                child: Text(
+                  'Oops! Something went wrong:\nPlease check your internet connection',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.redAccent, fontSize: 16),
+                ),
+              );
             case StoryDetailSuccessState(:final storyDetail):
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.read<MapProvider>().setLocationWithAddress(
